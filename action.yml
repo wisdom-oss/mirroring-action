@@ -24,7 +24,7 @@ outputs:
   created-repository:
     description: 'Indicates if the repository has been created'
     value: ${{ steps.create-repo.outputs.created-repo }}
-  repository-http-url:
+  repo-url:
     description: 'contains the full http url pointing to the repository'
     value: ${{ steps.create-repo.outputs.repo-url }}
 
