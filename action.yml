@@ -34,12 +34,10 @@ runs:
     - name: create-repo
       shell: bash
       run: |
-        sudo apt-get update
-        sudo apt-get install jq
-        touch response.json
-        REPO_CREATION_STATUS=$(curl -X POST -w "%{http_code}" -o response.json --oauth2-bearer "${{ inputs.pat }}" "${{ inputs.host }}/api/v4/projects?name=${{ inputs.repository }}&namespace_id=${{inputs.namespace}}")
+        REPO_CREATION_STATUS=$(curl -X POST -w "%{http_code}" -o "response.json" --oauth2-bearer "${{ inputs.pat }}" "${{ inputs.host }}/api/v4/projects?name=${{ inputs.repository }}&namespace_id=${{inputs.namespace}}")
 
         if [ "$REPO_CREATION_STATUS" -eq 201  ]; then
+            echo "::notice ::Repository created"
             echo "created-repo=true" >> $GITHUB_OUTPUT
             echo "repo-url=$(cat response.json | jq .http_url_to_repo)" >> $GITHUB_OUTPUT
 
@@ -49,6 +47,7 @@ runs:
             echo "$(cat response.json | jq)" >> $GITHUB_STEP_SUMMARY
             echo "```"
         elif [ "$REPO_CREATION_STATUS" -eq 400  ]; then
+            echo "::notice ::Repository already existing"
             echo "created-repo=false" >> $GITHUB_OUTPUT
         else
             echo "Unknown error occurred during mirroring setup"
