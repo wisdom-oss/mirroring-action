@@ -31,7 +31,7 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: create-repo
+    - id: create-repo
       shell: bash
       run: |
         REPO_CREATION_STATUS=$(curl -X POST -w "%{http_code}" -o "repo-data.json" --oauth2-bearer "${{ inputs.pat }}" "${{ inputs.host }}/api/v4/projects?name=${{ inputs.repository }}&namespace_id=${{inputs.namespace}}")
