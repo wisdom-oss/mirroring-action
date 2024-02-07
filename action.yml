@@ -48,7 +48,7 @@ runs:
             echo "```"
         elif [ "$REPO_CREATION_STATUS" -eq 400  ]; then
             echo "::notice ::Repository already existing"
-            curl -vv --oauth2-bearer "${{ inputs.pat }}" -o "namespace-data.json" "${{ inputs.host }}/api/v4/namespaces/${{inputs.namespace}}?with_projects=false"
+            curl --oauth2-bearer "${{ inputs.pat }}" -o "namespace-data.json" "${{ inputs.host }}/api/v4/namespaces/${{inputs.namespace}}?with_projects=false"
             echo "created-repo=false" >> $GITHUB_OUTPUT
             echo "repo-url=${{ inputs.host }}/$(cat namespace-data.json | jq --raw-output .full_path)/${{ inputs.repository }}.git" >> $GITHUB_OUTPUT
         else
@@ -60,7 +60,7 @@ runs:
         fetch-depth: 0
     - uses: yesolutions/mirror-action@master
       with:
-        REMOTE: ${{ outputs.repo-url }}
+        REMOTE: ${{ steps.create-repo.outputs.repo-url }}
         GIT_USERNAME: ${{ inputs.user }}
         GIT_PASSWORD: ${{ inputs.pat }}
         PUSH_ALL_REFS: true
