@@ -36,7 +36,7 @@ runs:
         apt-get update
         apt-get install jq
         touch response.json
-        REPO_CREATION_STATUS=$(curl -X POST -w "%{http_code}" -o response.json --oauth2-bearer "${{ input.pat }}" "${{ input.host }}/api/v4/projects?name=${{ input.repository }}&namespace_id=${{input.namespace}}")
+        REPO_CREATION_STATUS=$(curl -X POST -w "%{http_code}" -o response.json --oauth2-bearer "${{ inputs.pat }}" "${{ inputs.host }}/api/v4/projects?name=${{ inputs.repository }}&namespace_id=${{inputs.namespace}}")
 
         if [ "$REPO_CREATION_STATUS" -eq 201  ]; then
             echo "created-repo=true" >> $GITHUB_OUTPUT
@@ -59,6 +59,6 @@ runs:
     - uses: yesolutions/mirror-action@master
       with:
         REMOTE: ${{steps.create-repo.outputs.repo-url}}
-        GIT_USERNAME: ${{ secrets.MIRROR_USER }}
-        GIT_PASSWORD: ${{ secrets.MIRROR_PASSWORD }}
+        GIT_USERNAME: ${{ inputs.user }}
+        GIT_PASSWORD: ${{ inputs.pat }}
         PUSH_ALL_REFS: true
