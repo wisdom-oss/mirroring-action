@@ -60,7 +60,7 @@ runs:
         fetch-depth: 0
     - uses: yesolutions/mirror-action@master
       with:
-        REMOTE: ${{steps.create-repo.outputs.repo-url}}
+        REMOTE: ${{ outputs.repo-url }}
         GIT_USERNAME: ${{ inputs.user }}
         GIT_PASSWORD: ${{ inputs.pat }}
         PUSH_ALL_REFS: true
